@@ -1,0 +1,23 @@
+// Minimal Jenkins pipeline snippet for running the AI reviewer on a Gerrit change.
+pipeline {
+  agent any
+  environment {
+    GERRIT_URL           = 'https://gerrit.example.com'
+    GERRIT_USER          = credentials('gerrit-bot-user')
+    GERRIT_HTTP_PASSWORD = credentials('gerrit-bot-http-password')
+    LLM_PROVIDER         = 'openai'
+    LLM_BASE_URL         = 'https://llm.internal/v1'
+    LLM_API_KEY          = credentials('llm-api-key')
+    LLM_MODEL            = 'gpt-4o-mini'
+  }
+  stages {
+    stage('AI Review') {
+      steps {
+        sh '''
+          uv sync --frozen || uv sync
+          uv run gerrit-ai-review --change-id "${GERRIT_CHANGE_NUMBER}"
+        '''
+      }
+    }
+  }
+}

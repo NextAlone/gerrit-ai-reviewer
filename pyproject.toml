@@ -1,0 +1,22 @@
+[project]
+name = "gerrit-ai-reviewer"
+version = "0.1.0"
+description = "Gerrit AI code reviewer invoked from Jenkins pipeline by change-id"
+requires-python = ">=3.10"
+dependencies = [
+    "httpx>=0.27",
+    "click>=8.1",
+    "pydantic>=2.6",
+    "anthropic>=0.40",
+    "openai>=1.40",
+]
+
+[project.scripts]
+gerrit-ai-review = "gerrit_ai_reviewer.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gerrit_ai_reviewer"]
