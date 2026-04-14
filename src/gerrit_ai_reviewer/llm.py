@@ -6,6 +6,7 @@ Supports two backends, both honoring a custom base_url:
 
 The model is asked to return JSON matching `ReviewResult`.
 """
+
 from __future__ import annotations
 
 import json
@@ -50,10 +51,7 @@ class ReviewResult(BaseModel):
 
 
 def review(cfg: LLMConfig, user_prompt: str) -> ReviewResult:
-    if cfg.provider == "openai":
-        raw = _call_openai(cfg, user_prompt)
-    else:
-        raw = _call_anthropic(cfg, user_prompt)
+    raw = _call_openai(cfg, user_prompt) if cfg.provider == "openai" else _call_anthropic(cfg, user_prompt)
     return _parse(raw)
 
 

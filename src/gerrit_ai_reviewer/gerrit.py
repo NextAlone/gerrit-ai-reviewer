@@ -4,6 +4,7 @@ Docs: https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html
 Gerrit JSON responses are prefixed with `)]}'\\n` for XSSI protection; strip it.
 Authenticated endpoints live under `/a/`.
 """
+
 from __future__ import annotations
 
 import base64
@@ -31,7 +32,7 @@ class GerritClient:
     def close(self) -> None:
         self._client.close()
 
-    def __enter__(self) -> "GerritClient":
+    def __enter__(self) -> GerritClient:
         return self
 
     def __exit__(self, *exc: Any) -> None:
@@ -50,7 +51,7 @@ class GerritClient:
             raise GerritError(f"GET {path} -> {r.status_code}: {r.text[:300]}")
         text = r.text
         if text.startswith(_XSSI_PREFIX):
-            text = text[len(_XSSI_PREFIX):]
+            text = text[len(_XSSI_PREFIX) :]
         return json.loads(text)
 
     def _get_text(self, path: str, params: dict[str, Any] | None = None) -> str:
@@ -69,7 +70,7 @@ class GerritClient:
             raise GerritError(f"POST {path} -> {r.status_code}: {r.text[:300]}")
         text = r.text
         if text.startswith(_XSSI_PREFIX):
-            text = text[len(_XSSI_PREFIX):]
+            text = text[len(_XSSI_PREFIX) :]
         return json.loads(text) if text.strip() else None
 
     # --- high level --------------------------------------------------------

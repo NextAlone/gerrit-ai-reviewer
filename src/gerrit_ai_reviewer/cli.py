@@ -10,6 +10,7 @@ Example:
     export LLM_MODEL=gpt-4o-mini
     gerrit-ai-review --change-id 12345
 """
+
 from __future__ import annotations
 
 import json
@@ -23,7 +24,9 @@ from .reviewer import run
 
 
 @click.command(context_settings={"show_default": True})
-@click.option("--change-id", required=True, help="Gerrit change id (numeric, Change-Id, or project~branch~Change-Id)")
+@click.option(
+    "--change-id", required=True, help="Gerrit change id (numeric, Change-Id, or project~branch~Change-Id)"
+)
 @click.option("--revision", default="current", help="Revision: 'current', sha, or patchset number")
 @click.option("--dry-run", is_flag=True, help="Do not post back to Gerrit, print result JSON")
 @click.option(

@@ -1,4 +1,5 @@
 """Orchestration: change-id -> Gerrit fetch -> LLM review -> post back."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -63,7 +64,7 @@ def _build_prompt(change: dict[str, Any], files: dict[str, Any], patch: str) -> 
     project = change.get("project", "")
     branch = change.get("branch", "")
     owner = (change.get("owner") or {}).get("name", "")
-    file_list = [p for p in files.keys() if p != "/COMMIT_MSG"]
+    file_list = [p for p in files if p != "/COMMIT_MSG"]
 
     if len(patch) > MAX_PATCH_CHARS:
         patch = patch[:MAX_PATCH_CHARS] + "\n...[truncated]..."
@@ -93,9 +94,7 @@ def _group_comments(
         if c.file not in valid_files:
             # Model hallucinated a file path; skip silently — summary still carries context.
             continue
-        grouped.setdefault(c.file, []).append(
-            {"line": c.line, "message": f"[{c.severity}] {c.message}"}
-        )
+        grouped.setdefault(c.file, []).append({"line": c.line, "message": f"[{c.severity}] {c.message}"})
     return grouped
 
 
